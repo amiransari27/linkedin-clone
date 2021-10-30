@@ -9,9 +9,12 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import Post from '../post/Post';
 import { db } from '../../firebase';
 import firebase from 'firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectUser } from '../../features/userSlice';
+import FlipMove from 'react-flip-move' 
 
 function Feed() {
-
+    const user = useSelector(selectUser)
     const [input, setInput] = useState("")
     const [posts, setPosts] = useState([])
 
@@ -31,7 +34,7 @@ function Feed() {
         event.preventDefault()
 
         db.collection("posts").add({
-            name: "Amir",
+            name: user.displayName,
             description: "this is a test",
             message: input,
             photoUrl: "",
@@ -63,16 +66,19 @@ function Feed() {
                 </div>
             </div>
             {/* posts */}
-            {
-                posts.map(({ id, data: { name, description, message, photoUrl } }) => (
-                    <Post
-                        key={id}
-                        name={name}
-                        description={description}
-                        message={message}
-                        photoUrl={photoUrl} />
-                ))
-            }
+            <FlipMove>
+                {
+                    posts.map(({ id, data: { name, description, message, photoUrl } }) => (
+                        <Post
+                            key={id}
+                            name={name}
+                            description={description}
+                            message={message}
+                            photoUrl={photoUrl} />
+                    ))
+                }
+            </FlipMove>
+
 
         </div>
     )
